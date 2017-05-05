@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.1.0">
+<eagle version="8.1.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -820,6 +820,58 @@
 </deviceset>
 </devicesets>
 </library>
+<library name="supply1">
+<description>&lt;b&gt;Supply Symbols&lt;/b&gt;&lt;p&gt;
+ GND, VCC, 0V, +5V, -5V, etc.&lt;p&gt;
+ Please keep in mind, that these devices are necessary for the
+ automatic wiring of the supply signals.&lt;p&gt;
+ The pin name defined in the symbol is identical to the net which is to be wired automatically.&lt;p&gt;
+ In this library the device names are the same as the pin names of the symbols, therefore the correct signal names appear next to the supply symbols in the schematic.&lt;p&gt;
+ &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="GND">
+<wire x1="-1.905" y1="0" x2="1.905" y2="0" width="0.254" layer="94"/>
+<text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
+</symbol>
+<symbol name="VCC">
+<wire x1="1.27" y1="-1.905" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="-1.905" width="0.254" layer="94"/>
+<text x="-2.54" y="-2.54" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
+<pin name="VCC" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="GND" prefix="GND">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="VCC" prefix="P+">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="VCC" symbol="VCC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -832,17 +884,38 @@
 <parts>
 <part name="IC1" library="tb6612" deviceset="TB6612FNG" device=""/>
 <part name="IC2" library="tb6612" deviceset="TB6612FNG" device=""/>
-<part name="U$1" library="PololuMG_v2" deviceset="POLOLU" device=""/>
 <part name="U1" library="STM32F103RBT6" deviceset="STM32F103RBT6" device=""/>
+<part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="GND2" library="supply1" deviceset="GND" device=""/>
+<part name="GND3" library="supply1" deviceset="GND" device=""/>
+<part name="GND4" library="supply1" deviceset="GND" device=""/>
+<part name="GND5" library="supply1" deviceset="GND" device=""/>
+<part name="P+1" library="supply1" deviceset="VCC" device=""/>
+<part name="P+2" library="supply1" deviceset="VCC" device=""/>
+<part name="P+3" library="supply1" deviceset="VCC" device=""/>
+<part name="P+4" library="supply1" deviceset="VCC" device=""/>
+<part name="P+5" library="supply1" deviceset="VCC" device=""/>
+<part name="P+6" library="supply1" deviceset="VCC" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 </plain>
 <instances>
-<instance part="IC1" gate="G$1" x="88.9" y="99.06"/>
-<instance part="IC2" gate="G$1" x="137.16" y="99.06"/>
-<instance part="U1" gate="A" x="109.22" y="228.6"/>
+<instance part="IC1" gate="G$1" x="200.66" y="269.24"/>
+<instance part="IC2" gate="G$1" x="200.66" y="208.28"/>
+<instance part="U1" gate="A" x="111.76" y="246.38"/>
+<instance part="GND1" gate="1" x="73.66" y="180.34"/>
+<instance part="GND2" gate="1" x="63.5" y="276.86"/>
+<instance part="GND3" gate="1" x="154.94" y="246.38"/>
+<instance part="GND4" gate="1" x="241.3" y="243.84"/>
+<instance part="GND5" gate="1" x="243.84" y="177.8"/>
+<instance part="P+1" gate="VCC" x="60.96" y="314.96"/>
+<instance part="P+2" gate="VCC" x="175.26" y="299.72"/>
+<instance part="P+3" gate="VCC" x="220.98" y="297.18"/>
+<instance part="P+4" gate="VCC" x="172.72" y="231.14"/>
+<instance part="P+5" gate="VCC" x="231.14" y="231.14"/>
+<instance part="P+6" gate="VCC" x="157.48" y="193.04"/>
 </instances>
 <busses>
 </busses>
