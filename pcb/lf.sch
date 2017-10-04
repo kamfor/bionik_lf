@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.1.1">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -17177,8 +17177,8 @@ DIN A3, landscape with location and doc. field</description>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="P+5" library="supply1" deviceset="VCC" device=""/>
 <part name="P+8" library="supply1" deviceset="VCC" device=""/>
-<part name="Q1" library="crystal-geyer_V1_0" deviceset="KX" device="-7"/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="R0603"/>
+<part name="Q1" library="crystal-geyer_V1_0" deviceset="KX" device="-7" value="8MHz"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="R0603" value="1M"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="R3" library="rcl" deviceset="R-EU_" device="R0603" value="10k"/>
 <part name="R14" library="rcl" deviceset="R-EU_" device="R0603" value="4k7"/>
