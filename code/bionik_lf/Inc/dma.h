@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * File Name          : dma.h
+  * Description        : This file contains all the function prototypes for
+  *                      the dma.c file
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -36,72 +37,42 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __dma_H
+#define __dma_H
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f1xx_hal.h"
+#include "main.h"
+
+/* DMA memory to memory transfer handles -------------------------------------*/
+extern void _Error_Handler(char*, int);
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
-
-#define SW_Pin GPIO_PIN_13
-#define SW_GPIO_Port GPIOC
-#define M1A_Pin GPIO_PIN_2
-#define M1A_GPIO_Port GPIOC
-#define M1B_Pin GPIO_PIN_3
-#define M1B_GPIO_Port GPIOC
-#define M2A_Pin GPIO_PIN_4
-#define M2A_GPIO_Port GPIOC
-#define M2B_Pin GPIO_PIN_5
-#define M2B_GPIO_Port GPIOC
-#define SENSOREN_Pin GPIO_PIN_2
-#define SENSOREN_GPIO_Port GPIOB
-#define LED0_Pin GPIO_PIN_10
-#define LED0_GPIO_Port GPIOB
-#define LED1_Pin GPIO_PIN_11
-#define LED1_GPIO_Port GPIOB
-#define LED2_Pin GPIO_PIN_12
-#define LED2_GPIO_Port GPIOB
-#define LED3_Pin GPIO_PIN_13
-#define LED3_GPIO_Port GPIOB
-#define PWM1_Pin GPIO_PIN_14
-#define PWM1_GPIO_Port GPIOB
-#define PWM2_Pin GPIO_PIN_15
-#define PWM2_GPIO_Port GPIOB
-#define LED4_Pin GPIO_PIN_6
-#define LED4_GPIO_Port GPIOC
-#define LED5_Pin GPIO_PIN_7
-#define LED5_GPIO_Port GPIOC
-#define LED6_Pin GPIO_PIN_8
-#define LED6_GPIO_Port GPIOC
-#define LED7_Pin GPIO_PIN_9
-#define LED7_GPIO_Port GPIOC
-#define LED8_Pin GPIO_PIN_8
-#define LED8_GPIO_Port GPIOA
-#define LED9_Pin GPIO_PIN_11
-#define LED9_GPIO_Port GPIOA
-#define LED_GREEN_Pin GPIO_PIN_12
-#define LED_GREEN_GPIO_Port GPIOA
-#define MEN_Pin GPIO_PIN_12
-#define MEN_GPIO_Port GPIOC
-
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void _Error_Handler(char *, int);
+void MX_DMA_Init(void);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __dma_H */
 
 /**
   * @}
-  */ 
+  */
 
-/**
-  * @}
-*/ 
-
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

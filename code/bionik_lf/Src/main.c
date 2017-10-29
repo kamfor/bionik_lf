@@ -39,9 +39,11 @@
 #include "main.h"
 #include "stm32f1xx_hal.h"
 #include "adc.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include <stdio.h>
 
 /* USER CODE BEGIN Includes */
 
@@ -51,6 +53,13 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+uint16_t Pwm1;
+uint16_t Pwm2;
+volatile uint16_t left_pulse_count;
+volatile uint16_t right_pulse_count;
+uint8_t debug_data[40];
+uint8_t data_size=0;
+uint16_t adc_pomiar;
 
 /* USER CODE END PV */
 
@@ -91,13 +100,30 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
 
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+
   /* USER CODE BEGIN 2 */
+
+  HAL_TIMEx_PWMN_Start_DMA(&htim1, TIM_CHANNEL_2, &Pwm1, 1);
+  HAL_TIMEx_PWMN_Start_DMA(&htim1, TIM_CHANNEL_3, &Pwm2, 1);
+
+  TIM1->CR1 |= TIM_CR1_CEN;
+
+  HAL_GPIO_WritePin(MEN_GPIO_Port, MEN_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(M1A_GPIO_Port, M1A_Pin,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(M1B_GPIO_Port, M2A_Pin,GPIO_PIN_SET);
+
+  HAL_ADC_Start(&hadc1);
+
+  ADC_ChannelConfTypeDef sConfig;
 
   /* USER CODE END 2 */
 
@@ -106,27 +132,136 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-	  HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED3_GPIO_Port,LED3_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED4_GPIO_Port,LED4_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED5_GPIO_Port,LED5_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED6_GPIO_Port,LED6_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED7_GPIO_Port,LED7_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED8_GPIO_Port,LED8_Pin);
-	  HAL_Delay(20);
-	  HAL_GPIO_TogglePin(LED9_GPIO_Port,LED9_Pin);
-	  HAL_Delay(20);
+
   /* USER CODE BEGIN 3 */
+
+	  sConfig.Channel = ADC_CHANNEL_0;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_1;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_2;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_3;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_4;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_5;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_6;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_7;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_8;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+	  sConfig.Channel = ADC_CHANNEL_9;
+	  sConfig.Rank = 1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+	  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
+	  adc_pomiar = HAL_ADC_GetValue(&hadc1);
+	  if(adc_pomiar>2000)HAL_GPIO_WritePin(LED9_GPIO_Port, LED9_Pin, GPIO_PIN_SET);
+	  else HAL_GPIO_WritePin(LED9_GPIO_Port, LED9_Pin, GPIO_PIN_RESET);
+	  HAL_ADC_Start(&hadc1);
+	  }
+
+
+	  if(HAL_GPIO_ReadPin(SW_GPIO_Port, SW_Pin)){
+
+		  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(SENSOREN_GPIO_Port, SENSOREN_Pin, GPIO_PIN_SET);
+		  HAL_Delay(10);
+	  }
+	  else{
+		  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(SENSOREN_GPIO_Port, SENSOREN_Pin, GPIO_PIN_RESET);
+		  HAL_Delay(10);
+	  }
+
+	  left_pulse_count = TIM3->CNT;
+	  right_pulse_count = TIM4->CNT;
+	  data_size = sprintf(debug_data,"Enc: %d :: %d",left_pulse_count, right_pulse_count);
+	  //HAL_UART_Transmit_IT(&huart1,debug_data, data_size);
 
   }
   /* USER CODE END 3 */
@@ -190,6 +325,20 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void user_pwm_setvalue(uint16_t value)
+{
+    TIM_OC_InitTypeDef sConfigOC;
+
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = value;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+    sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
+    sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+    sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+    HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2);
+    HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3);
+}
 
 /* USER CODE END 4 */
 
